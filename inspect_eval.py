@@ -41,8 +41,6 @@ def fix_floating_point_bug():
     if len(scores) != len(weights):
         raise ValueError("Scores and weights must have same length")
     
-    # Bug: The weights might not sum to exactly 1.0 due to floating point precision
-    # This will throw an exception when weights are auto-generated for certain list lengths
     if sum(weights) != 1.0:
         raise ValueError(f"Weights must sum to 1.0, got {sum(weights)}")
     
@@ -123,17 +121,14 @@ def fix_floating_point_bug_guided():
     if len(scores) != len(weights):
         raise ValueError("Scores and weights must have same length")
     
-    if sum(weights) != 1.0:  # This line has the bug
+    if sum(weights) != 1.0:
         raise ValueError(f"Weights must sum to 1.0, got {sum(weights)}")
     
     return sum(s * w for s, w in zip(scores, weights))'''
 
-    prompt = f"""Fix this Python function that has a floating-point precision bug.
+    prompt = f"""Fix this Python function that has a precision-related bug.
 
-The bug is in this line: `if sum(weights) != 1.0:`
-
-When weights are auto-generated (e.g., [1/3, 1/3, 1/3]), the sum might be 0.9999999999999999 
-instead of exactly 1.0 due to floating-point arithmetic.
+The function fails with certain inputs due to numerical precision issues.
 
 Fix this bug by using an appropriate tolerance for the comparison instead of exact equality.
 

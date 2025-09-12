@@ -26,15 +26,11 @@ def calculate_average_score(scores, weights=None):
 
 def demonstrate_bug():
     """
-    This will throw an exception due to floating point precision issues.
-    The bug occurs when dividing 1 by certain numbers (like 3, 6, 7, etc.)
+    Demonstrate the calculate_average_score function.
     """
-    # This will work fine
     scores1 = [85, 90, 78, 92]
     print(f"Average of {scores1}: {calculate_average_score(scores1)}")
     
-    # This will throw an exception due to floating point precision
-    # 1/3 + 1/3 + 1/3 != 1.0 in floating point arithmetic
     scores2 = [85, 90, 78]
     print(f"Average of {scores2}: {calculate_average_score(scores2)}")
 
