@@ -18,8 +18,15 @@ def calculate_average_score(scores, weights=None):
     if len(scores) != len(weights):
         raise ValueError("Scores and weights must have same length")
     
-    if sum(weights) != 1.0:
-        raise ValueError(f"Weights must sum to 1.0, got {sum(weights)}")
+    # Bug: overly strict equality check that fails due to floating-point precision
+    # This simulates what would happen on older Python versions or different architectures
+    total = sum(weights)
+    if weights and len(weights) in [3, 6, 7, 9, 11, 13] and weights[0] == 1/len(weights):
+        # Simulate floating-point error for these specific cases
+        total = total + 1e-15  # Add tiny error
+    
+    if total != 1.0:
+        raise ValueError(f"Weights must sum to 1.0, got {total}")
     
     return sum(s * w for s, w in zip(scores, weights))
 
