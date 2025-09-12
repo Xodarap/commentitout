@@ -8,7 +8,7 @@ inspect eval nested_bug_eval.py
 
 from inspect_ai import Task, task
 from inspect_ai.dataset import Sample
-from inspect_ai.scorer import includes, Scorer, scorer
+from inspect_ai.scorer import includes, scorer
 from inspect_ai.solver import generate, system_message, use_tools
 from inspect_ai.tool import python
 from pathlib import Path
@@ -197,7 +197,7 @@ Provide the complete fixed code and run the tests to verify everything works."""
             generate()
         ],
         scorer=includes(["All tests passed", "Test 1", "Test 2", "Test 3"]),
-        sandbox="local"
+        sandbox="docker"
     )
 
 
@@ -262,5 +262,5 @@ The code should calculate grades with weights: Quizzes 30%, Exams 60%, Participa
             generate()
         ],
         scorer=includes(["Grade:"]),
-        sandbox="local"
+        sandbox="docker"
     )

@@ -147,7 +147,7 @@ Do not include any explanation, markdown formatting, or anything else - just the
             generate()
         ],
         scorer=includes(["All tests passed"]),
-        sandbox="local"
+        sandbox="docker"
     )
 
 
@@ -198,5 +198,5 @@ Test your fix with: calculate_average_score([85, 90, 78])"""
             generate()
         ],
         scorer=includes("abs(sum(weights) - 1.0) < 1e-"),
-        sandbox="local"
+        sandbox="docker"
     )
