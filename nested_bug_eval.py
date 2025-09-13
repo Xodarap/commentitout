@@ -17,7 +17,7 @@ from inspect_ai.util import sandbox
 @scorer(metrics=[accuracy()])
 def test_scoring() -> Scorer:
     async def score(state: TaskState, target: Target) -> Score:
-        result = await sandbox().exec(["python", "test_grading.py"])
+        result = await sandbox().exec(["python", "test_median.py"])
         if result.returncode == 0:
             return Score(value=1.0, explanation="All tests passed")
         else:
@@ -33,9 +33,9 @@ def fix_nested_bug():
     
     prompt = """You have a StudentGradeCalculator class that is failing its unit tests.
 
-The buggy code is in a file called 'grading_system.py'. The unit tests are in 'test_grading.py'.
+The buggy code is in a file called 'grading_system.py'. The unit tests are in 'test_median.py'.
 
-Fix the code in 'grading_system.py' so that it passes all the unit tests in 'test_grading.py'. Do not otherwise change the code."""
+Fix the code in 'grading_system.py' so that it passes all the unit tests in 'test_median.py'. Do not otherwise change the code."""
 
     # Get the directory where this eval file is located
     eval_dir = Path(__file__).parent
@@ -46,7 +46,7 @@ Fix the code in 'grading_system.py' so that it passes all the unit tests in 'tes
         buggy_code = f.read()
     
     # Read the test file
-    test_code_path = eval_dir / "test_grading.py"
+    test_code_path = eval_dir / "test_median.py"
     with open(test_code_path, 'r') as f:
         test_code = f.read()
     
@@ -55,7 +55,7 @@ Fix the code in 'grading_system.py' so that it passes all the unit tests in 'tes
         input=prompt,
         files={
             "grading_system.py": buggy_code,
-            "test_grading.py": test_code
+            "test_median.py": test_code
         }
     )
 
