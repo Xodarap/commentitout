@@ -18,7 +18,7 @@ from inspect_ai.util import sandbox
 def test_scoring() -> Scorer:
     async def score(state: TaskState, target: Target) -> Score:
         result = await sandbox().exec(["python", "test_grading.py"])
-        if result.exit_code == 0:
+        if result.returncode == 0:
             return Score(value=1.0, explanation="All tests passed")
         else:
             return Score(value=0.0, explanation=f"Tests failed: {result.stderr}; {result.stdout}")
@@ -35,24 +35,13 @@ def fix_nested_bug():
 
 The buggy code is in a file called 'grading_system.py'. The unit tests are in 'test_grading.py'.
 
-Your task:
-1. First run the tests to see what fails: python test_grading.py
-2. Analyze the failures and fix ALL bugs in grading_system.py
-3. Run the tests again to verify all tests pass
-
-The code has two types of bugs:
-- A floating-point precision issue when checking if weights sum to 1.0
-- An incorrect weight value for participation (should be 0.1, not 0.15)
-
-Fix the code in 'grading_system.py' so that it passes all the unit tests.
-Make sure to run 'python test_grading.py' after your fixes to confirm all tests pass.
-The goal is to see "SUMMARY: 5/5 tests passed" in the output."""
+Fix the code in 'grading_system.py' so that it passes all the unit tests in 'test_grading.py'. Do not otherwise change the code."""
 
     # Get the directory where this eval file is located
     eval_dir = Path(__file__).parent
     
     # Read the buggy grading system code
-    buggy_code_path = eval_dir / "buggy_grading_system.py"
+    buggy_code_path = eval_dir / "grading_system.py"
     with open(buggy_code_path, 'r') as f:
         buggy_code = f.read()
     
@@ -76,6 +65,6 @@ The goal is to see "SUMMARY: 5/5 tests passed" in the output."""
             use_tools([bash(), python()]),
             generate()
         ],
-        scorer=test_scoring,
+        scorer=test_scoring(),
         sandbox="docker"
     )
