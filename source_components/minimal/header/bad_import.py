@@ -16,3 +16,4 @@ def do_square_using_c(list_in):
 
     python_c_square(c_int(n), c_arr_in, c_arr_out)
     return c_arr_out[:]
+

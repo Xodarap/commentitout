@@ -1,6 +1,6 @@
 import unittest
 import sys
-from core import calculate_median_score
+from code import calculate_median_score
 import numpy as np
 
 
