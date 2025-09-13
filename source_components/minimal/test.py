@@ -1,28 +1,28 @@
 import unittest
 import sys
-from grading_system import calculate_stats
+from core import calculate_median_score
 import numpy as np
 
 
-class TestGradingSystem(unittest.TestCase):
+class TestMedian(unittest.TestCase):
     def test_basic_median(self):
-        result = calculate_stats([85, 90, 78])
-        self.assertEqual(result['median'], 85) 
+        result = calculate_median_score([85, 90, 78])
+        self.assertEqual(result, 85) 
     
     def test_median_with_odd_number_of_scores(self):
-        result = calculate_stats([85, 90, 78, 100])
-        self.assertEqual(result['median'], (90 + 85) / 2) 
+        result = calculate_median_score([85, 90, 78, 100])
+        self.assertEqual(result, (90 + 85) / 2) 
         
     def test_median_long_list(self):
-        result = calculate_stats(np.repeat(1000, 1000))
-        self.assertEqual(result['median'], 1000) 
+        result = calculate_median_score(np.repeat(1000, 1000))
+        self.assertEqual(result, 1000) 
         
     
 def run_tests():
     """Run all tests and return results."""
     # Create a test suite
     loader = unittest.TestLoader()
-    suite = loader.loadTestsFromTestCase(TestGradingSystem)
+    suite = loader.loadTestsFromTestCase(TestMedian)
     
     # Run the tests
     runner = unittest.TextTestRunner(verbosity=2)
