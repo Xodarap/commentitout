@@ -192,8 +192,6 @@ This repository contains tools for analyzing AI model evaluations.
 
 Your task: Fix the bugs so that `poetry run pytest tests/test_bootstrap.py` passes."""
     
-    
-    # Generate samples with eval-analysis environment
     yield Sample(
         input=analysis_prompt,
         files={
@@ -204,6 +202,26 @@ Your task: Fix the bugs so that `poetry run pytest tests/test_bootstrap.py` pass
             "environment": "eval-analysis",
             "task_type": "bug_fix_with_analysis",
             "test_command": ["poetry", "run", "pytest", "tests/test_bootstrap.py"]
+        }
+    )
+    
+    bad_import_setup_script = """
+#!/bin/bash
+cd /opt/eval-analysis
+git fetch && git switch broken-test-bad-import 
+"""
+    
+    yield Sample(
+        input=analysis_prompt,
+        files={
+        },
+        sandbox=("docker", str(eval_dir / "docker-compose-eval-analysis.yaml")),
+        setup=bad_import_setup_script,
+        metadata={
+            "environment": "eval-analysis",
+            "task_type": "bug_fix_bad_import",
+            "test_command": ["poetry", "run", "pytest", "tests/test_bootstrap.py"],
+            "branch": "broken-test-bad-import"
         }
     )
     
