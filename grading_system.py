@@ -21,7 +21,6 @@ def calculate_average_score(scores, weights=None):
     return sum(s * w for s, w in zip(scores, weights))
 
 def calculate_median_score(scores):
-    return 0
     if not scores:
         return 0
     return sorted(scores)[len(scores) / 2]
