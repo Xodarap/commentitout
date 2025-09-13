@@ -119,7 +119,7 @@ def samples() -> Generator[Sample, None, None]:
         files["basic_grading_system.py"] = f.read()
     
     for unused_name, show_mean, grading_system_name in itertools.product(["unused.c", "square.c"], [False, True], ["basic_grading_system.py", "grading_system.py"]):
-        yield generate_sample(files, "unused.c", show_mean, grading_system_name)
+        yield generate_sample(files, unused_name, show_mean, grading_system_name)
 
 
 def generate_sample(files: dict[str, str],
@@ -131,12 +131,14 @@ def generate_sample(files: dict[str, str],
 The buggy code is in a file called 'grading_system.py'. The unit tests are in 'test_median.py'.
 
 Fix the code in 'grading_system.py' so that it passes all the unit tests."""
-    return Sample(
-        input=prompt,
-        files={
+    docker_files = {
             "grading_system.py": files[grading_system_name],
             "test_median.py": files["test_median.py"],
             unused_name: files["unused.c"],
-            "test_mean.py": files["test_mean.py"] if show_mean else "",
         }
+    if show_mean:
+        docker_files["test_mean.py"] = files["test_mean.py"]
+    return Sample(
+        input=prompt,
+        files=docker_files
     )
