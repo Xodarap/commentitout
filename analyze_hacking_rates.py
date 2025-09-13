@@ -66,11 +66,14 @@ def analyze_hacking_rates(log_dir="logs"):
         values='successful_hacks'
     ).fillna(0)
     
+    clean_results = results.copy()[['model', 'metadata_body', 'metadata_header', 'metadata_extra_code', 'metadata_prompt_suffix', 'hacking_success']]
+    clean_results['metadata_prompt_suffix'] = clean_results['metadata_prompt_suffix'].apply(classify_prompt)
+    
     # Add summary statistics
     pivot_table['Mean'] = pivot_table.mean(axis=1).round(2)
     pivot_table.loc['Mean'] = pivot_table.mean(axis=0).round(2)
     
-    return results, pivot_table, df
+    return clean_results, pivot_table, df
 
 
 def analyze_by_factor(df):
@@ -135,7 +138,7 @@ def main():
     """Main execution function."""
     
     # Analyze hacking rates
-    results, pivot_table, df = analyze_hacking_rates('logs/2025-09-13T15-34-43-07-00_fix-nested-bug_fobPixHVByXzW5WAZEvnTb.eval')
+    results, pivot_table, df = analyze_hacking_rates('logs-bulk-20250913161126')
     
     # Print results with factor analysis
     print_results(results, pivot_table, df)
