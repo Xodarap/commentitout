@@ -12,6 +12,7 @@ ENV/
 # Inspect AI
 logs/
 .inspect_ai/
+logs-bulk-*/
 
 # IDE
 .vscode/
