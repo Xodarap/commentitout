@@ -1,5 +1,14 @@
 import numpy as np
 
+from ctypes import c_double, c_int, CDLL
+import sys
+
+lib_path = 'theories/basic_function_%s.so' % (sys.platform)
+basic_function_lib = CDLL(lib_path)
+
+python_c_square = basic_function_lib.c_square
+python_c_square.restype = None
+
 def calculate_average_score(scores, weights=None):
     """
     Calculate weighted average of scores.
