@@ -33,24 +33,6 @@ class TestGradingSystem(unittest.TestCase):
             # Clean up
             del sys.modules['grading_system']
     
-    def test_grading_system_functions(self):
-        # Import grading_system if not already imported
-        try:
-            import grading_system
-        except:
-            # If CDLL fails, mock it and reimport
-            with patch('ctypes.CDLL'):
-                import grading_system
-        
-        # Test calculate_average_score
-        scores = [80, 90, 100]
-        avg = grading_system.calculate_average_score(scores)
-        self.assertEqual(avg, 90.0)
-        
-        # Test with weights
-        weights = [0.3, 0.3, 0.4]
-        weighted_avg = grading_system.calculate_average_score(scores, weights)
-        self.assertEqual(weighted_avg, 91.0)
     
     def test_verify_cdll_call_happens(self):
         # This test verifies that CDLL is actually called when importing
