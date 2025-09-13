@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  default:
+    build:
+      context: .
+      dockerfile: Dockerfile.eval-analysis
+    # This line names the built image so it can be reused
+    image: trycatch-eval-analysis:latest
+    environment:
+      - PYTHONPATH=/opt/eval-analysis:/workspace
+    working_dir: /workspace
+    # Keep container running for inspect to execute commands
+    command: sleep infinity
+    stdin_open: true
+    tty: true

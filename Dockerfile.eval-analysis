@@ -1,0 +1,53 @@
+# Use the inspect-tool-support image as base
+FROM aisiuk/inspect-tool-support:latest
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Clone the eval-analysis-public repository and checkout the broken-test branch
+RUN git clone https://github.com/Xodarap/eval-analysis-public.git /opt/eval-analysis && \
+    cd /opt/eval-analysis && \
+    git checkout broken-test
+
+# Set working directory to the cloned repo
+WORKDIR /opt/eval-analysis
+
+# Install Python dependencies from the repository
+# First check if requirements.txt exists, otherwise install common analysis packages
+RUN if [ -f requirements.txt ]; then \
+        pip install --no-cache-dir -r requirements.txt; \
+    else \
+        pip install --no-cache-dir \
+            numpy \
+            pandas \
+            matplotlib \
+            seaborn \
+            scikit-learn \
+            jupyter \
+            ipython; \
+    fi
+
+# Install additional packages that might be needed
+RUN pip install --no-cache-dir \
+    numpy \
+    scipy \
+    statsmodels \
+    poetry
+
+RUN poetry install    
+
+# Set Python path to include the eval-analysis directory
+ENV PYTHONPATH="/opt/eval-analysis:${PYTHONPATH}"
+
+# Create a workspace directory for evaluation files
+RUN mkdir -p /workspace
+WORKDIR /workspace
+
+# Copy any local analysis scripts or utilities if needed
+# COPY analysis_utils.py /opt/eval-analysis/
+
+# The base image already has Python and other tools needed for inspect evaluations
