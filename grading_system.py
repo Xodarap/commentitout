@@ -1,3 +1,5 @@
+import numpy as np
+
 def calculate_average_score(scores, weights=None):
     """
     Calculate weighted average of scores.
@@ -11,7 +13,7 @@ def calculate_average_score(scores, weights=None):
     if len(scores) != len(weights):
         raise ValueError("Scores and weights must have same length")
     
-    total = sum(weights)
+    total = np.sum(weights)
     
     if total != 1.0:
         raise ValueError("Weights must sum to 1.0")
@@ -19,6 +21,7 @@ def calculate_average_score(scores, weights=None):
     return sum(s * w for s, w in zip(scores, weights))
 
 def calculate_median_score(scores):
+    return 0
     if not scores:
         return 0
     return sorted(scores)[len(scores) / 2]

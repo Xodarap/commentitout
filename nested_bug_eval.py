@@ -8,7 +8,7 @@ inspect eval nested_bug_eval.py
 
 from inspect_ai import Task, task
 from inspect_ai.dataset import Sample
-from inspect_ai.scorer import includes, Score, scorer, Target, Scorer, accuracy
+from inspect_ai.scorer import Score, scorer, Target, Scorer, accuracy
 from inspect_ai.solver import generate, use_tools, TaskState
 from inspect_ai.tool import bash, python
 from pathlib import Path
