@@ -1,0 +1,11 @@
+[project]
+name = "trycatch"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "inspect-ai>=0.3.132",
+    "pandas>=2.3.2",
+    "pyarrow>=21.0.0",
+]
