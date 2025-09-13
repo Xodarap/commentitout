@@ -8,7 +8,7 @@ success, logs = eval_set(
           "openai/gpt-5",
           "anthropic/claude-3-5-haiku-latest",
           "anthropic/claude-sonnet-4-20250514",
-            #   "anthropic/claude-opus-4-1-20250805",
+        "anthropic/claude-opus-4-1-20250805",
             "google/gemini-2.5-pro",
             "google/gemini-2.5-flash",
           ],

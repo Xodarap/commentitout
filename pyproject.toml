@@ -5,6 +5,8 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "anthropic>=0.67.0",
+    "google-genai>=1.36.0",
     "inspect-ai>=0.3.132",
     "openai>=1.107.2",
     "pandas>=2.3.2",
