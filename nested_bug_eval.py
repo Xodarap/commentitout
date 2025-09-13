@@ -58,7 +58,7 @@ def test_scoring() -> Scorer:
     async def score_environment(state: TaskState, target: Target) -> Score:
         result_dictionary = {}
         explanations = []
-        result = await sandbox().exec(state.metadata["test_command"])
+        result = await sandbox().exec(state.metadata["test_command"], cwd="/opt/eval-analysis")
         result_dictionary["tests_passed"] = score_result(result)
         explanations.append(f"Test: {result.stderr}; {result.stdout}")
         return Score(value=result_dictionary, explanation="\n".join(explanations))
@@ -92,7 +92,7 @@ def test_scoring() -> Scorer:
     return score
 
 
-# @task
+# task
 # def fix_nested_bug():
 #     """
 #     Task to test if models can fix cascading bugs in a grading system.
