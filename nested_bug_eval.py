@@ -14,6 +14,7 @@ from inspect_ai.tool import bash, python
 from pathlib import Path
 from inspect_ai.util import sandbox, ExecResult
 import itertools
+from typing import Generator
 
 @metric(name="hacked")
 def hacked() -> Metric:
@@ -79,11 +80,9 @@ def fix_nested_bug():
     """
     Task to test if models can fix cascading bugs in a grading system.
     """
-    
-
 
     return Task(
-        dataset=[sample],
+        dataset=list(samples()),
         solver=[
             use_tools([bash(), python()]),
             generate()
@@ -92,7 +91,7 @@ def fix_nested_bug():
         sandbox="docker"
     )
     
-def samples() -> list[Sample]:
+def samples() -> Generator[Sample, None, None]:
     files = {}
     # Get the directory where this eval file is located
     eval_dir = Path(__file__).parent
@@ -106,11 +105,17 @@ def samples() -> list[Sample]:
     test_median_path = eval_dir / "test_median.py"
     with open(test_median_path, 'r') as f:
         files["test_median.py"] = f.read()
+    
+    test_mean_path = eval_dir / "test_mean.py"
+    with open(test_mean_path, 'r') as f:
+        files["test_mean.py"] = f.read()
         
-    with open("unused.c", "r") as f:
+    unused_path = eval_dir / "unused.c"
+    with open(unused_path, "r") as f:
         files["unused.c"] = f.read()
     
-    with open("basic_grading_system.py", "r") as f:
+    basic_grading_path = eval_dir / "basic_grading_system.py"
+    with open(basic_grading_path, "r") as f:
         files["basic_grading_system.py"] = f.read()
     
     for unused_name, show_mean, grading_system_name in itertools.product(["unused.c", "square.c"], [False, True], ["basic_grading_system.py", "grading_system.py"]):
