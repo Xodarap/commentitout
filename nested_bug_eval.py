@@ -92,61 +92,56 @@ def test_scoring() -> Scorer:
     return score
 
 
-# task
-# def fix_nested_bug():
-#     """
-#     Task to test if models can fix cascading bugs in a grading system.
-#     """
-
-#     return Task(
-#         dataset=list(samples_from_folders()),
-#         solver=[
-#             use_tools([bash(), python()]),
-#             generate()
-#         ],
-#         scorer=test_scoring(),
-#         sandbox="docker"
-#     )
-
 @task
-def fix_nested_bug_with_eval_analysis():
+def fix_nested_bug():
     """
-    Task to test if models can fix bugs using the eval-analysis-public repository tools.
-    This task runs in a container with the eval-analysis repository pre-installed.
+    Task to test if models can fix cascading bugs in a grading system.
     """
-    
+
     return Task(
-        dataset=list(samples_with_eval_analysis()),
+        dataset=list(samples_from_folders()),
         solver=[
             use_tools([bash(), python()]),
             generate()
         ],
         scorer=test_scoring(),
-        # Default sandbox is overridden per-sample
         sandbox="docker"
     )
     
     
 def samples_from_folders() -> Generator[Sample, None, None]:
-    headers = glob.glob("source_components/minimal/header/*.py")
-    bodies = glob.glob("source_components/minimal/body/*.py")
+    folders = glob.glob("source_components/*")
+    for folder in folders:
+        yield from samples_from_folder(folder)
+        
+def samples_from_folder(folder: str) -> Generator[Sample, None, None]:
+    headers = glob.glob(f"{folder}/header/*.py")
+    bodies = glob.glob(f"{folder}/body/*.py")
+    extra_files = glob.glob(f"{folder}/extra_files/*.py")
+    extra_codes = glob.glob(f"{folder}/extra_code/*.py")
     header_contents = {header.split("/")[-1]: open(header, "r").read() for header in headers}
     body_contents = {body.split("/")[-1]: open(body, "r").read() for body in bodies}
-    test_contents = open("source_components/minimal/test.py", "r").read()
-    c_contents = open("unused.c", "r").read()
+    extra_files_contents = {extra_file.split("/")[-1]: open(extra_file, "r").read() for extra_file in extra_files}
+    extra_code_contents = {extra_code.split("/")[-1]: open(extra_code, "r").read() for extra_code in extra_codes}
+    test_contents = open(f"{folder}/test.py", "r").read()
+    core_contents = open(f"{folder}/core.py", "r").read()
     for header in header_contents:
         for body in body_contents:
-            yield Sample(
-                input=PROMPT,
-                files={
-                    "code.py": header_contents[header] + body_contents[body],
-                    "test.py": test_contents,
-                    "square.c": c_contents
-                },
-                metadata={
-                    "task_root": "source_components/minimal",
-                }
-            )
+            for extra_code in extra_code_contents:
+                yield Sample(
+                    input=PROMPT,
+                    files={
+                        "code.py": header_contents[header] + body_contents[body] + core_contents + extra_code_contents[extra_code],
+                        "test.py": test_contents,
+                        **extra_files_contents
+                    },
+                    metadata={
+                        "task_root": folder,
+                        "extra_code": extra_code,
+                        "header": header,
+                        "body": body
+                    }
+                )
 
 def samples_with_eval_analysis() -> Generator[Sample, None, None]:
     """
