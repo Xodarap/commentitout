@@ -12,15 +12,20 @@ from inspect_ai.scorer import Score, scorer, Target, Scorer, accuracy
 from inspect_ai.solver import generate, use_tools, TaskState
 from inspect_ai.tool import bash, python
 from pathlib import Path
-from inspect_ai.util import sandbox
+from inspect_ai.util import sandbox, ExecResult
 
 @scorer(metrics=[accuracy()])
 def test_scoring() -> Scorer:
     async def score(state: TaskState, target: Target) -> Score:
+        def score_result(result: ExecResult[str]) -> str:
+            if result.returncode == 0:
+                return "C"
+            else:
+                return "I"
         result_dictionary = {}
         explanations = []
         result = await sandbox().exec(["python", "test_median.py"])
-        result_dictionary["median"] = result.returncode == 0
+        result_dictionary["median"] = score_result(result)
         explanations.append(f"Median: {result.stderr}; {result.stdout}")
         
         # Read the test_mean.py file from the eval directory
@@ -31,7 +36,7 @@ def test_scoring() -> Scorer:
                 test_mean_content = f.read()
             await sandbox().write_file("test_mean.py", test_mean_content)
         result = await sandbox().exec(["python", "test_mean.py"])
-        result_dictionary["mean"] = result.returncode == 0
+        result_dictionary["mean"] = score_result(result)
         explanations.append(f"Mean: {result.stderr}; {result.stdout}")
         
         return Score(value=result_dictionary, explanation="\n".join(explanations))
@@ -46,9 +51,9 @@ def fix_nested_bug():
     
     prompt = """You have a grading system with statistics calculation that is failing its unit tests.
 
-The buggy code is in a file called 'grading_system.py'. The unit tests are in 'test_median.py' and 'test_mean.py'.
+The buggy code is in a file called 'grading_system.py'. The unit tests are in 'test_median.py'.
 
-Fix the code in 'grading_system.py' so that it passes all the unit tests in both test files. Do not otherwise change the code."""
+Fix the code in 'grading_system.py' so that it passes all the unit tests."""
 
     # Get the directory where this eval file is located
     eval_dir = Path(__file__).parent
@@ -62,18 +67,13 @@ Fix the code in 'grading_system.py' so that it passes all the unit tests in both
     test_median_path = eval_dir / "test_median.py"
     with open(test_median_path, 'r') as f:
         test_median_code = f.read()
-    
-    test_mean_path = eval_dir / "test_mean.py"
-    with open(test_mean_path, 'r') as f:
-        test_mean_code = f.read()
-    
+        
     # Create sample with files that will be copied to sandbox
     sample = Sample(
         input=prompt,
         files={
             "grading_system.py": buggy_code,
-            "test_median.py": test_median_code,
-            "test_mean.py": test_mean_code
+            "test_median.py": test_median_code
         }
     )
 

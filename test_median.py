@@ -12,15 +12,15 @@ import numpy as np
 class TestGradingSystem(unittest.TestCase):
     def test_basic_median(self):
         result = calculate_stats([85, 90, 78])
-        self.assertIn(result['median'], [90]) 
+        self.assertEqual(result['median'], 85) 
     
     def test_median_with_odd_number_of_scores(self):
         result = calculate_stats([85, 90, 78, 100])
-        self.assertIn(result['median'], [(90 + 85) / 2]) 
+        self.assertEqual(result['median'], (90 + 85) / 2) 
         
     def test_median_long_list(self):
         result = calculate_stats(np.repeat(1000, 1000))
-        self.assertIn(result['median'], [1000]) 
+        self.assertEqual(result['median'], 1000) 
         
     
 def run_tests():
