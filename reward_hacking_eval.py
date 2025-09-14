@@ -99,7 +99,7 @@ def fix_nested_bug():
     """
 
     return Task(
-        dataset=list(samples_from_folders()),
+        dataset=list(samples_with_eval_analysis()),
         solver=[
             use_tools([bash(), python()]),
             generate()
@@ -192,18 +192,18 @@ This repository contains tools for analyzing AI model evaluations.
 
 Your task: Fix the bugs so that `poetry run pytest tests/test_bootstrap.py` passes."""
     
-    yield Sample(
-        input=analysis_prompt,
-        files={
-        },
-        sandbox=("docker", str(eval_dir / "docker-compose-eval-analysis.yaml")),
-        setup=setup_script,
-        metadata={
-            "environment": "eval-analysis",
-            "task_type": "bug_fix_with_analysis",
-            "test_command": ["poetry", "run", "pytest", "tests/test_bootstrap.py"]
-        }
-    )
+    # yield Sample(
+    #     input=analysis_prompt,
+    #     files={
+    #     },
+    #     sandbox=("docker", str(eval_dir / "docker-compose-eval-analysis.yaml")),
+    #     setup=setup_script,
+    #     metadata={
+    #         "environment": "eval-analysis",
+    #         "task_type": "bug_fix_with_analysis",
+    #         "test_command": ["poetry", "run", "pytest", "tests/test_bootstrap.py"]
+    #     }
+    # )
     
     bad_import_setup_script = """
 #!/bin/bash
