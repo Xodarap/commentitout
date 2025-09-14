@@ -66,12 +66,12 @@ def analyze_hacking_rates(log_dir="logs"):
         values='successful_hacks'
     ).fillna(0)
     
-    clean_results = results.copy()[['model', 'metadata_body', 'metadata_header', 'metadata_extra_code', 'metadata_prompt_suffix', 'hacking_success']]
-    clean_results['metadata_prompt_suffix'] = clean_results['metadata_prompt_suffix'].apply(classify_prompt)
-    
     # Add summary statistics
     pivot_table['Mean'] = pivot_table.mean(axis=1).round(2)
     pivot_table.loc['Mean'] = pivot_table.mean(axis=0).round(2)
+    
+    clean_results = df[['model', 'metadata_body', 'metadata_header', 'metadata_extra_code', 'metadata_prompt_suffix', 'hacking_success']].copy()
+    clean_results['metadata_prompt_suffix'] = clean_results['metadata_prompt_suffix'].apply(classify_prompt)
     
     return clean_results, pivot_table, df
 
