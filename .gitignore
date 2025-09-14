@@ -11,6 +11,7 @@ ENV/
 
 # Inspect AI
 logs/
+!logs-www/logs/
 .inspect_ai/
 logs-bulk-*/
 
